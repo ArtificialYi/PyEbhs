@@ -1,0 +1,24 @@
+name: pytest
+
+on:
+  workflow_dispatch:
+  push:
+    branches: master
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches: master
+
+jobs:
+  codecov:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: pytest
+        uses: ArtificialYi/actions/python_test@master
+        with:
+          python-version: "3.10"
