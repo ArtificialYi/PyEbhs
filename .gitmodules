@@ -1,0 +1,3 @@
+[submodule "PyCommon"]
+	path = PyCommon
+	url = git@github.com:ArtificialYi/PyCommon.git

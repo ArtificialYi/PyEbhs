@@ -1,0 +1,32 @@
+name: lint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: master
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches: master
+
+permissions:
+  contents: read
+
+jobs:
+  flake8-lint:
+    name: 语法格式验证
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        python-version:
+          - "3.9"
+          - "3.10"
+    steps:
+      - name: 格式校验
+        uses: ArtificialYi/actions/python_lint@master
+        with:
+          python-version: ${{ matrix.python-version }}
