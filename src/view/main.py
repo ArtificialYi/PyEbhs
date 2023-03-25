@@ -116,6 +116,7 @@ class MyFrame(wx.Frame):
         self.__history_inactive = ListLabel(panel, "已回顾", ["1", "2", "3"])
         self.__data.Add(self.__history_inactive, 1, wx.ALIGN_CENTER | wx.ALL, MARGIN)
 
+        self.refresh()
         panel.Fit()
         self.Fit()
         pass
@@ -149,7 +150,7 @@ class MyFrame(wx.Frame):
     pass
 
 
-def main(loop: asyncio.AbstractEventLoop, pool: aiomysql.Pool):
+def main_loop(loop: asyncio.AbstractEventLoop, pool: aiomysql.Pool):
     app = wx.App()
     frame = MyFrame("艾宾浩斯记忆法", loop, Schedule(ExecSchedule(pool)))
     frame.Show()
