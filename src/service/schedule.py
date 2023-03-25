@@ -19,7 +19,7 @@ class Schedule:
             pass
         return res
 
-    async def list_schedule_history(self, str_date: str):
+    async def list_schedule_inactivate(self, str_date: str):
         res = []
         async for row in self.__exec_schedule.iter_schedule_history(str_date):
             res.append(row)

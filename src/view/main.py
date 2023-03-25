@@ -1,5 +1,16 @@
-from typing import Callable, List
+import asyncio
+from concurrent.futures import Future
+from typing import Callable, Coroutine, Dict, List
+import aiomysql
 import wx
+
+from ...PyCommon.configuration.rds import DBPool
+
+from ...PyCommon.src.tool.base import AsyncBase
+
+from ..repository.exec.schedule import ExecSchedule
+
+from ..service.schedule import Schedule
 
 
 MARGIN = 2
@@ -84,8 +95,10 @@ class ListLabel(wx.BoxSizer):
 
 
 class MyFrame(wx.Frame):
-    def __init__(self, title):
+    def __init__(self, title, loop: asyncio.AbstractEventLoop, service: Schedule):
         super().__init__(None, title=title)
+        self.__loop = loop
+        self.__service = service
 
         panel = wx.Panel(self)
         self.__view = wx.BoxSizer(wx.VERTICAL)
@@ -111,19 +124,46 @@ class MyFrame(wx.Frame):
         self.Fit()
         pass
 
+    async def __get_data(self):
+        dict_sorted = await self.__service.list_schedule_activate('')
+        history_inactive = await self.__service.list_schedule_inactivate('')
+        dict_sorted["history_inactive"] = history_inactive
+        return dict_sorted
+
+    def __data_show(self, future: Future):
+        dict_sorted: Dict[str, List[str]] = future.result()
+        self.__history_active.refresh(dict_sorted["history_active"])
+        self.__today_active.refresh(dict_sorted["today_active"])
+        self.__history_inactive.refresh(dict_sorted["history_inactive"])
+        pass
+
+    def async2sync(self, coro: Coroutine, callback: Callable):
+        future = asyncio.run_coroutine_threadsafe(coro, self.__loop)
+        future.add_done_callback(callback)
+        pass
+
     def refresh(self):
         # 刷新数据
-        self.__history_active.refresh(["1", "2", "3", "4", "5"])
-        self.__today_active.refresh(["1", "2", "3", "4", "5"])
-        self.__history_inactive.refresh(["1", "2", "3", "4", "5"])
+        wx.CallAfter(self.async2sync, self.__get_data(), self.__data_show)
         pass
 
     def on_button_click(self, event):
         wx.MessageBox("按钮已点击！", "表单事件", wx.OK | wx.ICON_INFORMATION)
+        pass
+    pass
 
 
-if __name__ == "__main__":
+def main(loop: asyncio.AbstractEventLoop, pool: aiomysql.Pool):
+    # 主程序入口
     app = wx.App()
-    frame = MyFrame("艾宾浩斯记忆法")
+    frame = MyFrame("艾宾浩斯记忆法", loop, Schedule(ExecSchedule(pool)))
     frame.Show()
     app.MainLoop()
+    pass
+
+
+async def async_main():
+    # 异步主程序入口
+    loop = asyncio.get_event_loop()
+    async with DBPool() as pool:
+        return await AsyncBase.func2coro_exec(main, loop, pool)
