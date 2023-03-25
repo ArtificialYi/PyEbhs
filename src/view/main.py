@@ -1,7 +1,7 @@
 import asyncio
 from concurrent.futures import Future
 from datetime import datetime
-from typing import Callable, Coroutine, Dict, List
+from typing import Callable, Dict, List
 import aiomysql
 import wx
 
@@ -69,7 +69,7 @@ class ListLabelButton(wx.BoxSizer):
             self.__items[key] = LabelButton(self.__parent, data, self.__callback)
             self.Insert(idx, self.__items[key], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
             pass
-        # self.Layout()
+        self.Layout()
         pass
     pass
 
@@ -111,7 +111,7 @@ class ListLabel(wx.BoxSizer):
             self.__items[str_label] = wx.StaticText(self.__parent, label=str_label)
             self.Insert(idx, self.__items[str_label], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
             pass
-        # self.Layout()
+        self.Layout()
         pass
     pass
 
@@ -148,12 +148,20 @@ class MyFrame(wx.Frame):
         self.__data = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__data, 1, wx.EXPAND | wx.ALL, MARGIN)
         self.__history_active = ListLabelButton(self.__panel, "历史未回顾", [], self.on_button_click)
-        self.__data.Add(self.__history_active, 1, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+        self.__data.Add(self.__history_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
         self.__today_active = ListLabelButton(self.__panel, "今日未回顾", [], self.on_button_click)
-        self.__data.Add(self.__today_active, 1, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+        self.__data.Add(self.__today_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
         self.__history_inactive = ListLabel(self.__panel, "已回顾", [])
-        self.__data.Add(self.__history_inactive, 1, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+        self.__data.Add(self.__history_inactive, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
         self.refresh()
+        self.__panel.Fit()
+        self.Fit()
+        pass
+
+    def refresh(self):
+        # 刷新数据
+        future = asyncio.run_coroutine_threadsafe(self.__get_data(), self.__loop)
+        future.add_done_callback(self.__data_show)
         pass
 
     async def __get_data(self):
@@ -168,18 +176,13 @@ class MyFrame(wx.Frame):
         self.__history_active.refresh(dict_data_sorted["active_history"])
         self.__today_active.refresh(dict_data_sorted["active_today"])
         self.__history_inactive.refresh(dict_data_sorted["inactive_history"])
+        wx.CallAfter(self.__review_main)
+        pass
+
+    def __review_main(self):
         self.__panel.Layout()
+        self.__panel.Fit()
         self.Fit()
-        pass
-
-    def async2sync(self, coro: Coroutine, callback: Callable):
-        future = asyncio.run_coroutine_threadsafe(coro, self.__loop)
-        future.add_done_callback(callback)
-        pass
-
-    def refresh(self):
-        # 刷新数据
-        wx.CallAfter(self.async2sync, self.__get_data(), self.__data_show)
         pass
 
     def on_button_click(self, event):
