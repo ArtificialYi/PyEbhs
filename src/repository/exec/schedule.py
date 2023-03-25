@@ -1,10 +1,10 @@
 import aiomysql
 
+from ...modules.PyCommon.src.repository.rds import DBExecutorSafe
+
 from ..action.history_schedule import ActionHistorySchedule
 
 from ..action.active_schedule import ActionActiveSchedule
-
-from ....PyCommon.src.repository.rds import DBExecutorSafe
 
 
 class ExecSchedule:

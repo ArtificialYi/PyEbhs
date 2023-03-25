@@ -4,10 +4,6 @@ from typing import Callable, Coroutine, Dict, List
 import aiomysql
 import wx
 
-from ...PyCommon.configuration.rds import DBPool
-
-from ...PyCommon.src.tool.base import AsyncBase
-
 from ..repository.exec.schedule import ExecSchedule
 
 from ..service.schedule import Schedule
@@ -154,16 +150,8 @@ class MyFrame(wx.Frame):
 
 
 def main(loop: asyncio.AbstractEventLoop, pool: aiomysql.Pool):
-    # 主程序入口
     app = wx.App()
     frame = MyFrame("艾宾浩斯记忆法", loop, Schedule(ExecSchedule(pool)))
     frame.Show()
     app.MainLoop()
     pass
-
-
-async def async_main():
-    # 异步主程序入口
-    loop = asyncio.get_event_loop()
-    async with DBPool() as pool:
-        return await AsyncBase.func2coro_exec(main, loop, pool)

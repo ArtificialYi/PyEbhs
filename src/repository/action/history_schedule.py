@@ -1,4 +1,4 @@
-from ....PyCommon.src.repository.rds import FetchAction
+from ...modules.PyCommon.src.repository.rds import FetchAction
 
 
 class ActionHistorySchedule:
