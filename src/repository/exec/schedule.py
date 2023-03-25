@@ -1,5 +1,7 @@
 import aiomysql
 
+from ...data.schedule import DTActiveSchedule
+
 from ...modules.PyCommon.src.repository.rds import DBExecutorSafe
 
 from ..action.history_schedule import ActionHistorySchedule
@@ -17,7 +19,7 @@ class ExecSchedule:
         async with self.__exec_direct:
             # 获取活跃时间
             async for row in self.__exec_direct.iter_opt(ActionActiveSchedule().list_node(str_date)):
-                yield row
+                yield DTActiveSchedule.create_from_active(row)
                 pass
             pass
         pass
@@ -26,7 +28,7 @@ class ExecSchedule:
         async with self.__exec_direct:
             # 获取历史时间
             async for row in self.__exec_direct.iter_opt(ActionHistorySchedule().list_node(str_date)):
-                yield row
+                yield DTActiveSchedule.create_from_history(row)
                 pass
             pass
         pass

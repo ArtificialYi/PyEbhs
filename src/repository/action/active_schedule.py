@@ -8,7 +8,7 @@ class ActionActiveSchedule:
         sql = """
 SELECT * from `active_schedule`
 WHERE `time_except` <= %s
-AND `delted_date` == '9999-12-31 23:59:59'
+AND `deleted_date` = '9999-12-31 23:59:59'
 ORDER BY `time_node` ASC
 LIMIT 10;
         """
