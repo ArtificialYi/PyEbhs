@@ -31,17 +31,8 @@ class ExecSchedule:
             pass
         pass
 
-    # async def list_schedule(self, str_date: str):
-    #     res = {
-    #         'active_today': [],
-    #         'active_history': [],
-    #         'history': [],
-    #     }
-    #     async for row in self.iter_schedule_active(str_date):
-    #         if str_date > row['time_except']:
-    #             res['active_history'].append(row)
-    #             continue
-    #         res['active_today'].append(row)
-    #         pass
-    #     pass
+    async def entry_time_node(self, str_date: str, str_except: str, cycle: int):
+        async with self.__exec_direct:
+            # 入库活跃时间
+            return await self.__exec_direct.execute(ActionActiveSchedule().entry_time_node(str_date, str_except, cycle))
     pass
