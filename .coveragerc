@@ -1,5 +1,8 @@
 [run]
 branch = True
+omit =
+    src/modules/**
+    src/view/**
 
 [report]
 # 设置报告精度

@@ -141,7 +141,7 @@ class MyFrame(wx.Frame):
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "刷新", '', -1), self.on_button_click),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "刷新", '', -1), self.refresh),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
 
@@ -158,7 +158,7 @@ class MyFrame(wx.Frame):
         self.Fit()
         pass
 
-    def refresh(self):
+    def refresh(self, event=None):
         # 刷新数据
         future = asyncio.run_coroutine_threadsafe(self.__get_data(), self.__loop)
         future.add_done_callback(self.__data_show)

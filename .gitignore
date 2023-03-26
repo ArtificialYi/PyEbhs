@@ -1,5 +1,6 @@
 # pytest
 .coverage
+coverage.xml
 
 # python
 __pycache__
