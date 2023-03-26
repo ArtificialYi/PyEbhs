@@ -100,7 +100,7 @@ class MyFrame(wx.Frame):
         # 执行回顾事件 + 刷新界面
         self.__coro_and_callback(
             self.__service.review_one(button.data.time_node, dialog.review_date, dialog.cycle),
-            self.refresh
+            self.refresh,
         )
         return
 
@@ -110,6 +110,11 @@ class MyFrame(wx.Frame):
         res = dialog.ShowModal()
         if res != wx.ID_OK:
             return
+        # 执行录入事件 + 刷新界面
+        self.__coro_and_callback(
+            self.__service.entry_time_node(dialog.time_node, dialog.time_expect, dialog.cycle),
+            self.refresh,
+        )
         pass
     pass
 

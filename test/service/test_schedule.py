@@ -1,12 +1,14 @@
 from datetime import datetime
 
+from ...src.modules.PyCommon.src.tool.func_tool import PytestAsyncTimeout
+
 from ...src.modules.PyCommon.mock.rds import MockConnection, MockCursor, MockDBPool
 from ...src.repository.exec.schedule import ExecSchedule
 from ...src.service.schedule import Schedule
 
 
 class TestSchedule:
-    # @PytestAsyncTimeout(1)
+    @PytestAsyncTimeout(1)
     async def test_activate_schedule(self):
         row0 = {
             'id': 1, 'time_node': datetime.strptime('2020-01-01', '%Y-%m-%d'),
@@ -30,7 +32,7 @@ class TestSchedule:
         )
         pass
 
-    # @PytestAsyncTimeout(1)
+    @PytestAsyncTimeout(1)
     async def test_inactivate_schedule(self):
         row0 = {
             'id': 1, 'time_node': datetime.strptime('2019-01-01', '%Y-%m-%d'),
@@ -47,9 +49,15 @@ class TestSchedule:
         assert data_list[0].time_node == row0['time_node'].strftime('%Y-%m-%d')
         pass
 
-    # @PytestAsyncTimeout(10)
+    @PytestAsyncTimeout(1)
     async def test_review_one(self):
         schedule = Schedule(ExecSchedule(MockDBPool('test')))
         # 检查复查
         await schedule.review_one('2019-12-31', '2020-01-03', 1)
+
+    @PytestAsyncTimeout(1)
+    async def test_entry_time_node(self):
+        schedule = Schedule(ExecSchedule(MockDBPool('test')))
+        # 检查入库
+        await schedule.entry_time_node('2019-12-31', '2020-01-03', 1)
     pass
