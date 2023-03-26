@@ -83,6 +83,7 @@ class MyFrame(wx.Frame):
         self.__panel.Layout()
         self.__panel.Fit()
         self.Fit()
+        self.__panel.Refresh()
         pass
 
     def on_review_one_click(self, event: wx.CommandEvent):

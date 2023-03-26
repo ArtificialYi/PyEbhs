@@ -43,16 +43,11 @@ class ListLabelButton(wx.BoxSizer):
         return -1
 
     def refresh(self, data_sorted: List[DTActiveSchedule]):
-        keys = [
+        # 移除不在列表中的控件
+        self.__remove_window([
             data.time_node
             for data in data_sorted
-        ]
-        # 移除不在列表中的控件
-        [
-            self.Remove(self.__button_idx(self.__items[key]))
-            for key in self.__items.keys()
-            if key not in keys
-        ]
+        ])
 
         # 添加新的控件
         keys = self.__items.keys()
@@ -63,7 +58,16 @@ class ListLabelButton(wx.BoxSizer):
             self.__items[key] = LabelButton(self.__parent, data, self.__callback)
             self.Insert(idx, self.__items[key], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
             pass
-        self.Layout()
+        pass
+
+    def __remove_window(self, key_available: List[str]):
+        keys = set(self.__items.keys())
+        for key in keys:
+            if key not in key_available:
+                self.Remove(self.__button_idx(self.__items[key]))
+                del self.__items[key]
+                pass
+            pass
         pass
     pass
 
@@ -86,16 +90,11 @@ class ListLabel(wx.BoxSizer):
         return -1
 
     def refresh(self, data_sorted: List[DTActiveSchedule]):
-        keys = [
+        # 移除不在列表中的控件
+        self.__remove_window([
             data.time_node
             for data in data_sorted
-        ]
-        # 移除不在列表中的控件
-        [
-            self.Remove(self.__button_idx(self.__items[key]))
-            for key in self.__items.keys()
-            if key not in keys
-        ]
+        ])
 
         # 添加新的控件
         keys = self.__items.keys()
@@ -105,6 +104,15 @@ class ListLabel(wx.BoxSizer):
             self.__items[data.time_node] = wx.StaticText(self.__parent, label=data.time_node)
             self.Insert(idx, self.__items[data.time_node], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
             pass
-        self.Layout()
+        pass
+
+    def __remove_window(self, key_available: List[str]):
+        keys = set(self.__items.keys())
+        for key in keys:
+            if key not in key_available:
+                self.Remove(self.__button_idx(self.__items[key]))
+                del self.__items[key]
+                pass
+            pass
         pass
     pass
