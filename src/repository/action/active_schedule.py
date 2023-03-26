@@ -16,7 +16,7 @@ LIMIT 10;
         return FetchAction(sql, str_date)
 
     @staticmethod
-    def entry_time_node(str_date: str, str_except: str, cycle: int):
+    def insert_one(str_date: str, str_except: str, cycle: int):
         sql = """
 INPUT INTO `active_schedule` (`time_node`, `time_except`, `cycle`)
 VALUES (%s, %s, %s);

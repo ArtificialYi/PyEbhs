@@ -5,7 +5,7 @@ from typing import Callable, Coroutine, Dict, List
 import aiomysql
 import wx
 
-from .dialog import ButtonDialog
+from .dialog import EntryDialog, ReviewDialog
 
 from .label_list import LabelButton, ListLabel, ListLabelButton
 from .base import MARGIN
@@ -27,15 +27,15 @@ class MyFrame(wx.Frame):
         self.__opt = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__opt, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_review_one_click),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_default),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "录入", '', -1), self.on_review_one_click),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "录入", '', -1), self.on_entry_click),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_review_one_click),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_default),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
@@ -52,6 +52,10 @@ class MyFrame(wx.Frame):
         self.__history_inactive = ListLabel(self.__panel, "已回顾", [])
         self.__data.Add(self.__history_inactive, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
         self.refresh()
+        pass
+
+    def on_default(self, event: wx.CommandEvent):
+        wx.MessageDialog(self, "功能尚未完成").ShowWindowModal()
         pass
 
     def refresh(self, event=None):
@@ -88,11 +92,10 @@ class MyFrame(wx.Frame):
 
     def on_review_one_click(self, event: wx.CommandEvent):
         button = event.GetEventObject()
-        dialog = ButtonDialog(self.__panel, button.data)
+        dialog = ReviewDialog(self.__panel, button.data)
         dialog.CenterOnParent()
         res = dialog.ShowModal()
         if res != wx.ID_OK:
-            dialog.Destroy()
             return
         # 执行回顾事件 + 刷新界面
         self.__coro_and_callback(
@@ -100,6 +103,14 @@ class MyFrame(wx.Frame):
             self.refresh
         )
         return
+
+    def on_entry_click(self, event: wx.CommandEvent):
+        dialog = EntryDialog(self.__panel)
+        dialog.CenterOnParent()
+        res = dialog.ShowModal()
+        if res != wx.ID_OK:
+            return
+        pass
     pass
 
 
