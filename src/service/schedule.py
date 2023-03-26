@@ -28,4 +28,7 @@ class Schedule:
             res.append(data)
             pass
         return res
+
+    async def review_one(self, time_node: str, time_real: str, cycle: int):
+        await self.__exec_schedule.review_one(time_node, time_real, cycle)
     pass

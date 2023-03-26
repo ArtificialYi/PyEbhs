@@ -20,12 +20,12 @@ COMMENT='活跃时间表';
 ```
 ```
 CREATE TABLE `history_schedule` (
-    `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一的自增标识',
-    `time_node` datetime NOT NULL COMMENT '时间节点',
-    `time_real` datetime NOT NULL COMMENT '实际回顾时间',
-	PRIMARY KEY (`id`),
-	KEY `idx_cur` (`time_real`) COMMENT '数据展示使用'
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一的自增标识',
+  `time_node` date NOT NULL COMMENT '时间节点',
+  `time_real` date NOT NULL COMMENT '实际回顾时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_cur` (`time_real`,`time_node`) USING BTREE COMMENT '数据展示使用'
 ) ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_as_cs
+DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs
 COMMENT='历史回顾时间表';
 ```

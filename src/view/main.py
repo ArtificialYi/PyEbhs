@@ -94,13 +94,11 @@ class MyFrame(wx.Frame):
             dialog.Destroy()
             return
         # 执行回顾事件 + 刷新界面
-        self.__coro_and_callback(self.__review_one(button.data.time_node, dialog.review_date, dialog.cycle), self.refresh)
+        self.__coro_and_callback(
+            self.__service.review_one(button.data.time_node, dialog.review_date, dialog.cycle),
+            self.refresh
+        )
         return
-
-    async def __review_one(self, time_node: str, time_review: str, cycle: int):
-        # 执行回顾操作
-        # 刷新界面
-        pass
     pass
 
 

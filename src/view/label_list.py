@@ -99,11 +99,11 @@ class ListLabel(wx.BoxSizer):
 
         # 添加新的控件
         keys = self.__items.keys()
-        for idx, str_label in enumerate(data_sorted, 1):
-            if str_label in keys:
+        for idx, data in enumerate(data_sorted, 1):
+            if data.time_node in keys:
                 continue
-            self.__items[str_label] = wx.StaticText(self.__parent, label=str_label)
-            self.Insert(idx, self.__items[str_label], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+            self.__items[data.time_node] = wx.StaticText(self.__parent, label=data.time_node)
+            self.Insert(idx, self.__items[data.time_node], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
             pass
         self.Layout()
         pass
