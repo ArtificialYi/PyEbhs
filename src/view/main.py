@@ -2,7 +2,6 @@ import asyncio
 from concurrent.futures import Future
 from datetime import datetime
 from typing import Callable, Coroutine, Dict, List
-import aiomysql
 import wx
 
 from .dialog import EntryDialog, ReviewDialog
@@ -10,7 +9,6 @@ from .dialog import EntryDialog, ReviewDialog
 from .label_list import LabelButton, ListLabel, ListLabelButton
 from .base import MARGIN
 from ..data.schedule import DTActiveSchedule
-from ..repository.exec.schedule import ExecSchedule
 from ..service.schedule import Schedule
 
 
@@ -119,9 +117,9 @@ class MyFrame(wx.Frame):
     pass
 
 
-def main_loop(loop: asyncio.AbstractEventLoop, pool: aiomysql.Pool):
+def main_loop(loop: asyncio.AbstractEventLoop, db_name: str = 'test.db'):
     app = wx.App()
-    frame = MyFrame("艾宾浩斯记忆法", loop, Schedule(ExecSchedule(pool)))
+    frame = MyFrame("艾宾浩斯记忆法", loop, Schedule(db_name))
     frame.Show()
     app.MainLoop()
     pass
