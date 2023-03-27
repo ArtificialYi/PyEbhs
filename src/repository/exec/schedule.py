@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta
 import aiomysql
 
+from ..history_schedule import ActionHistorySchedule
+
+from ..action.rds.active_schedule import ActionActiveSchedule
+
 from ...data.schedule import DTActiveSchedule
-
-from ...modules.PyCommon.src.repository.rds import DBExecutorSafe
-
-from ..action.history_schedule import ActionHistorySchedule
-
-from ..action.active_schedule import ActionActiveSchedule
 
 
 class ExecSchedule:

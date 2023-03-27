@@ -1,4 +1,4 @@
-from ...modules.PyCommon.src.repository.rds import ExecuteAction, FetchAction
+from ...modules.PyCommon.src.repository.db import ActionExec, ActionIter
 
 
 class ActionHistorySchedule:
@@ -9,7 +9,7 @@ SELECT * FROM `history_schedule`
 WHERE `time_real` = %s
 ORDER BY `time_node` ASC;
         """
-        return FetchAction(sql, str_date)
+        return ActionIter(sql, str_date)
 
     @staticmethod
     def insert_one(time_node: str, time_real: str):
@@ -17,5 +17,5 @@ ORDER BY `time_node` ASC;
 INSERT INTO `history_schedule` (`time_node`, `time_real`)
 VALUES (%s, %s);
         """
-        return ExecuteAction(sql, time_node, time_real)
+        return ActionExec(sql, time_node, time_real)
     pass
