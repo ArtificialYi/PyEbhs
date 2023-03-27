@@ -3,6 +3,23 @@ from ...modules.PyCommon.src.repository.db import ActionExec, ActionIter
 
 class ActionActiveSchedule:
     @staticmethod
+    def create():
+        return ActionExec("""
+CREATE TABLE IF NOT EXISTS `active_schedule` (
+     `id` integer NOT NULL ON CONFLICT FAIL PRIMARY KEY AUTOINCREMENT,
+     `time_node` TEXT NOT NULL ON CONFLICT FAIL COLLATE BINARY,
+     `time_except` TEXT NOT NULL ON CONFLICT FAIL COLLATE BINARY,
+     `cycle` integer NOT NULL ON CONFLICT FAIL,
+     `deleted_date` TEXT NOT NULL ON CONFLICT FAIL DEFAULT '9999-12-31 23:59:59' COLLATE BINARY,
+    CONSTRAINT `idx_node` UNIQUE (time_node COLLATE BINARY ASC, deleted_date COLLATE BINARY DESC) ON CONFLICT FAIL
+);
+
+CREATE INDEX IF NOT EXISTS `idx_cur` ON `active_schedule` (
+    `deleted_date` COLLATE BINARY DESC, `time_except` COLLATE BINARY ASC
+);
+        """)
+
+    @staticmethod
     def list_node(str_date: str):
         sql = """
 SELECT * from `active_schedule`

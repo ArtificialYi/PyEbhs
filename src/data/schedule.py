@@ -7,14 +7,14 @@ class DTActiveSchedule:
         pass
 
     @staticmethod
-    def create_from_active(row: dict):
+    def create_from_active_sqlite(row: dict):
         return DTActiveSchedule(
-            row['id'], row['time_node'].strftime('%Y-%m-%d'), row['time_except'].strftime('%Y-%m-%d'), row['cycle'],
+            row['id'], row['time_node'], row['time_except'], row['cycle'],
         )
 
     @staticmethod
-    def create_from_history(row: dict):
+    def create_from_history_sqlite(row: dict):
         return DTActiveSchedule(
-            row['id'], row['time_node'].strftime('%Y-%m-%d'), row['time_real'].strftime('%Y-%m-%d'), -1,
+            row['id'], row['time_node'], row['time_real'], -1,
         )
     pass

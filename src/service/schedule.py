@@ -14,7 +14,8 @@ class Schedule:
             'active_today': [],
             'active_history': [],
         }
-        async for data in self.__exec.iter_schedule_active(str_date):
+        async for row in self.__exec.iter_schedule_active(str_date):
+            data = DTActiveSchedule.create_from_active_sqlite(row)
             if str_date > data.time_except:
                 res['active_history'].append(data)
                 continue
@@ -24,7 +25,8 @@ class Schedule:
 
     async def list_schedule_inactivate(self, str_date: str) -> List[DTActiveSchedule]:
         res = []
-        async for data in self.__exec.iter_schedule_history(str_date):
+        async for row in self.__exec.iter_schedule_history(str_date):
+            data = DTActiveSchedule.create_from_history_sqlite(row)
             res.append(data)
             pass
         return res

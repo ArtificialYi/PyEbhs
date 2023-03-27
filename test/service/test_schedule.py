@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 from ...src.modules.PyCommon.mock.db.sqlite import MockConnection, MockCursor
 
 from ...src.modules.PyCommon.src.tool.func_tool import PytestAsyncTimeout
@@ -13,12 +10,12 @@ class TestSchedule:
     @PytestAsyncTimeout(1)
     async def test_activate_schedule(self, mocker: MockerFixture):
         row0 = {
-            'id': 1, 'time_node': datetime.strptime('2020-01-01', '%Y-%m-%d'),
-            'time_except': datetime.strptime('2020-01-01', '%Y-%m-%d'), 'cycle': 1,
+            'id': 1, 'time_node': '2020-01-01',
+            'time_except': '2020-01-01', 'cycle': 1,
         }
         row1 = {
-            'id': 1, 'time_node': datetime.strptime('2020-01-02', '%Y-%m-%d'),
-            'time_except': datetime.strptime('2020-01-02', '%Y-%m-%d'), 'cycle': 1,
+            'id': 1, 'time_node': '2020-01-02',
+            'time_except': '2020-01-02', 'cycle': 1,
         }
         mock_cursor = MockCursor().mock_set_fetch_all([row0, row1])
         conn = MockConnection().mock_set_cursor(mock_cursor)
@@ -29,23 +26,23 @@ class TestSchedule:
         data_dict = await schedule.list_schedule_activate('2020-01-02')
         assert (
             len(data_dict['active_today']) == 1 and data_dict['active_today'][0]
-            .time_node == row1['time_node'].strftime('%Y-%m-%d')
+            .time_node == row1['time_node']
         )
         assert (
             len(data_dict['active_history']) == 1 and data_dict['active_history'][0]
-            .time_node == row0['time_node'].strftime('%Y-%m-%d')
+            .time_node == row0['time_node']
         )
         pass
 
     @PytestAsyncTimeout(1)
     async def test_inactivate_schedule(self, mocker: MockerFixture):
         row0 = {
-            'id': 1, 'time_node': datetime.strptime('2019-01-01', '%Y-%m-%d'),
-            'time_real': datetime.strptime('2020-01-01', '%Y-%m-%d'),
+            'id': 1, 'time_node': '2019-01-01',
+            'time_real': '2020-01-01',
         }
         row1 = {
-            'id': 1, 'time_node': datetime.strptime('2019-01-02', '%Y-%m-%d'),
-            'time_real': datetime.strptime('2020-01-02', '%Y-%m-%d'),
+            'id': 1, 'time_node': '2019-01-02',
+            'time_real': '2020-01-02',
         }
         mock_cursor = MockCursor().mock_set_fetch_all([row0, row1])
         conn = MockConnection().mock_set_cursor(mock_cursor)
@@ -53,7 +50,7 @@ class TestSchedule:
         schedule = Schedule('test.db')
         data_list = await schedule.list_schedule_inactivate('2020-01-02')
         assert len(data_list) == 2
-        assert data_list[0].time_node == row0['time_node'].strftime('%Y-%m-%d')
+        assert data_list[0].time_node == row0['time_node']
         pass
 
     @PytestAsyncTimeout(1)

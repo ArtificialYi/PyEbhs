@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import AsyncGenerator
 
 from ...modules.PyCommon.src.repository.sqlite import SqliteManage
 
@@ -6,7 +7,6 @@ from ..action.history_schedule import ActionHistorySchedule
 
 from ..action.active_schedule import ActionActiveSchedule
 from ...modules.PyCommon.src.repository.db import SqlManage
-from ...data.schedule import DTActiveSchedule
 
 
 class ScheduleSqlOne:
@@ -16,20 +16,20 @@ class ScheduleSqlOne:
         self.__manage = manage
         pass
 
-    async def iter_schedule_active(self, str_date: str):
+    async def iter_schedule_active(self, str_date: str) -> AsyncGenerator[dict, None]:
         async with self.__manage() as conn:
             # 获取活跃时间
             async for row in conn.iter(ActionActiveSchedule.list_node(str_date)):
-                yield DTActiveSchedule.create_from_active(row)
+                yield row
                 pass
             pass
         pass
 
-    async def iter_schedule_history(self, str_date: str):
+    async def iter_schedule_history(self, str_date: str) -> AsyncGenerator[dict, None]:
         async with self.__manage() as conn:
             # 获取历史时间
             async for row in conn.iter(ActionHistorySchedule.list_node(str_date)):
-                yield DTActiveSchedule.create_from_history(row)
+                yield row
                 pass
             pass
         pass
