@@ -46,8 +46,22 @@ VALUES (%s, %s, %s);
     def update_one(time_node: str, time_except: str, cycle: int):
         sql = """
 UPDATE `active_schedule` SET `time_except` = %s, `cycle` = %s
-WHERE `time_node` = %s AND `deleted_date` = '9999-12-31 23:59:59'
-LIMIT 2;
+WHERE `id` IN (
+    SELECT `id` FROM `active_schedule`
+    WHERE `time_node` = %s AND `deleted_date` = '9999-12-31 23:59:59'
+    LIMIT 2
+);
         """
         return ActionExec(sql, time_except, cycle, time_node)
+
+    @staticmethod
+    def delete_one(time_node: str, deleted_datetime: str):
+        sql = """
+UPDATE `active_schedule` SET `deleted_date` = %s
+WHERE `id` IN (
+    SELECT `id` FROM `active_schedule`
+    WHERE `time_node` = %s AND `deleted_date` = '9999-12-31 23:59:59'
+    LIMIT 2
+);"""
+        return ActionExec(sql, deleted_datetime, time_node)
     pass

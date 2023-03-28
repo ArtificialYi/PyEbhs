@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Callable, Coroutine, Dict, List
 import wx
 
-from .dialog import EntryDialog, ReviewDialog
+from .dialog import DeleteDialog, EntryDialog, ReviewDialog
 
 from .label_list import LabelButton, ListLabel, ListLabelButton
 from .base import MARGIN
@@ -33,7 +33,7 @@ class MyFrame(wx.Frame):
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_default),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_delete_click),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
@@ -63,8 +63,19 @@ class MyFrame(wx.Frame):
         self.__coro_and_callback(self.__get_data(), self.__data_show)
         pass
 
+    def __callback(self, future: Future):
+        # 回调异常处理
+        e = future.exception()
+        if e is not None:
+            raise e
+        pass
+
     def __coro_and_callback(self, coro: Coroutine, callback: Callable):
+        # 调用异步函数
+        # 回调异常处理
+        # 回调
         future = asyncio.run_coroutine_threadsafe(coro, self.__loop)
+        future.add_done_callback(self.__callback)
         future.add_done_callback(callback)
         pass
 
@@ -113,6 +124,21 @@ class MyFrame(wx.Frame):
         # 执行录入事件 + 刷新界面
         self.__coro_and_callback(
             self.__service.entry_time_node(dialog.time_node, dialog.time_expect, dialog.cycle),
+            self.__refresh,
+        )
+        pass
+
+    def on_delete_click(self, event: wx.CommandEvent):
+        dialog = DeleteDialog(self.__panel)
+        dialog.CenterOnParent()
+        res = dialog.ShowModal()
+        if res != wx.ID_OK:
+            return
+
+        # 执行删除事件 + 刷新界面
+        print(dialog.time_node)
+        self.__coro_and_callback(
+            self.__service.delete_time_node(dialog.time_node),
             self.__refresh,
         )
         pass

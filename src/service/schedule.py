@@ -9,6 +9,10 @@ class Schedule:
         self.__exec = ScheduleSqlite(db_name)
         pass
 
+    async def table_init(self):
+        await self.__exec.table_init()
+        pass
+
     async def list_schedule_activate(self, str_date: str) -> Dict[str, List[DTActiveSchedule]]:
         res = {
             'active_today': [],
@@ -39,7 +43,7 @@ class Schedule:
         await self.__exec.entry_time_node(time_node, time_except, cycle)
         pass
 
-    async def table_init(self):
-        await self.__exec.table_init()
+    async def delete_time_node(self, time_node: str):
+        await self.__exec.delete_time_node(time_node)
         pass
     pass
