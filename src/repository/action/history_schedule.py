@@ -7,8 +7,8 @@ class ActionHistorySchedule:
         return ActionExec("""
 CREATE TABLE IF NOT EXISTS `history_schedule` (
      `id` INTEGER NOT NULL ON CONFLICT FAIL PRIMARY KEY AUTOINCREMENT,
-     `time_node` text NOT NULL ON CONFLICT FAIL COLLATE BINARY,
-     `time_real` text NOT NULL ON CONFLICT FAIL COLLATE BINARY,
+     `time_node` text(10,0) NOT NULL ON CONFLICT FAIL COLLATE BINARY,
+     `time_real` text(10,0) NOT NULL ON CONFLICT FAIL COLLATE BINARY,
     CONSTRAINT `uniq_cur` UNIQUE (time_real COLLATE BINARY DESC, time_node COLLATE BINARY ASC) ON CONFLICT FAIL
 );
         """)
