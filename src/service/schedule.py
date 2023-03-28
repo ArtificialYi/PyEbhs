@@ -33,7 +33,13 @@ class Schedule:
 
     async def review_one(self, time_node: str, time_real: str, cycle: int):
         await self.__exec.review_one(time_node, time_real, cycle)
+        pass
 
     async def entry_time_node(self, time_node: str, time_except: str, cycle: int):
         await self.__exec.entry_time_node(time_node, time_except, cycle)
+        pass
+
+    async def table_init(self):
+        await self.__exec.table_init()
+        pass
     pass

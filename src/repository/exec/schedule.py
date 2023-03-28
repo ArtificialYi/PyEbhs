@@ -50,6 +50,13 @@ class ScheduleSqlOne:
             await conn.exec(ActionHistorySchedule.insert_one(time_node, time_real))
             pass
         pass
+
+    async def table_init(self):
+        async with self.__manage(True) as conn:
+            await conn.exec(ActionActiveSchedule.create())
+            await conn.exec(ActionHistorySchedule.create())
+            pass
+        pass
     pass
 
 

@@ -66,4 +66,11 @@ class TestSchedule:
         schedule = Schedule('test.db')
         # 检查入库
         await schedule.entry_time_node('2019-12-31', '2020-01-03', 1)
+
+    @PytestAsyncTimeout(1)
+    async def test_table_init(self, mocker: MockerFixture):
+        mocker.patch('PyEbhs.src.modules.PyCommon.src.repository.sqlite.get_conn', new=MockConnection)
+        schedule = Schedule('test.db')
+        await schedule.table_init()
+        pass
     pass
