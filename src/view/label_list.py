@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, Dict, List
 
 from .base import MARGIN
 from ..data.schedule import DTActiveSchedule
@@ -27,7 +27,7 @@ class ListLabelButton(wx.BoxSizer):
         self.__parent = parent
         self.__title = wx.StaticText(parent, label=title)
         self.Add(self.__title, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
-        self.__items = dict()
+        self.__items: Dict[str, LabelButton] = dict()
         self.__callback = button_callback
         for data in data_sorted:
             self.__items[data.time_node] = LabelButton(parent, data, self.__callback)
@@ -65,6 +65,7 @@ class ListLabelButton(wx.BoxSizer):
         for key in keys:
             if key not in key_available:
                 self.Remove(self.__button_idx(self.__items[key]))
+                self.__items[key].Destroy()
                 del self.__items[key]
                 pass
             pass
@@ -78,7 +79,7 @@ class ListLabel(wx.BoxSizer):
         self.__parent = parent
         self.__title = wx.StaticText(parent, label=title)
         self.Add(self.__title, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
-        self.__items = dict()
+        self.__items: Dict[str, wx.StaticText] = dict()
         self.refresh(str_sorted)
         pass
 
@@ -110,7 +111,10 @@ class ListLabel(wx.BoxSizer):
         keys = set(self.__items.keys())
         for key in keys:
             if key not in key_available:
-                self.Remove(self.__button_idx(self.__items[key]))
+                idx = self.__button_idx(self.__items[key])
+                self.Remove(idx)
+                print('移除：', key, idx)
+                self.__items[key].Destroy()
                 del self.__items[key]
                 pass
             pass

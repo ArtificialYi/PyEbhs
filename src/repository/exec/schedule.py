@@ -63,7 +63,6 @@ class ScheduleSqlOne:
         async with self.__manage(True) as conn:
             # 获取当前时间的年月日
             time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            print(time_now)
             # 删除活跃时间
             num_row = await conn.exec(ActionActiveSchedule.delete_one(time_node, time_now))
             if num_row > 1:

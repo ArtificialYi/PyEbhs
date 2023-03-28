@@ -41,9 +41,11 @@ class Schedule:
 
     async def entry_time_node(self, time_node: str, time_except: str, cycle: int):
         await self.__exec.entry_time_node(time_node, time_except, cycle)
+        print('录入时间节点: ', time_node, time_except, cycle)
         pass
 
     async def delete_time_node(self, time_node: str):
         await self.__exec.delete_time_node(time_node)
+        print('删除时间节点: ', time_node)
         pass
     pass

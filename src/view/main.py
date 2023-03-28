@@ -136,7 +136,6 @@ class MyFrame(wx.Frame):
             return
 
         # 执行删除事件 + 刷新界面
-        print(dialog.time_node)
         self.__coro_and_callback(
             self.__service.delete_time_node(dialog.time_node),
             self.__refresh,
