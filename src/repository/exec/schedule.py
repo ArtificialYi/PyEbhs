@@ -64,9 +64,7 @@ class ScheduleSqlOne:
             # 获取当前时间的年月日
             time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # 删除活跃时间
-            num_row = await conn.exec(ActionActiveSchedule.delete_one(time_node, time_now))
-            if num_row > 1:
-                raise Exception('影响行数超过1，数据异常')
+            await conn.exec(ActionActiveSchedule.delete_one(time_node, time_now))
             pass
         pass
     pass

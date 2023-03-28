@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 import wx
 
+from .calendar import CustomDatePicker
+
 from .base import MARGIN
 
 from ..data.schedule import DTActiveSchedule
@@ -15,7 +17,7 @@ class ReviewDialog(wx.Dialog):
 
         # 回顾时间
         review_tips = wx.StaticText(self.__panel, label="回顾时间：")
-        self.__review_input = wx.TextCtrl(self.__panel, value=datetime.now().strftime("%Y-%m-%d"))
+        self.__review_input = CustomDatePicker(self.__panel, datetime.now().strftime("%Y-%m-%d"))
         box_date = wx.BoxSizer(wx.HORIZONTAL)
         box_date.Add(review_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_date.Add(self.__review_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
@@ -45,7 +47,7 @@ class ReviewDialog(wx.Dialog):
 
     @property
     def review_date(self):
-        return self.__review_input.GetValue()
+        return self.__review_input.ymd_str
 
     @property
     def cycle(self):
@@ -69,7 +71,7 @@ class EntryDialog(wx.Dialog):
 
         # 时间节点
         time_node_tips = wx.StaticText(self.__panel, label="时间节点：")
-        self.__time_node_input = wx.TextCtrl(self.__panel, value=str_today)
+        self.__time_node_input = CustomDatePicker(self.__panel, str_today)
         box_time_node = wx.BoxSizer(wx.HORIZONTAL)
         box_time_node.Add(time_node_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_time_node.Add(self.__time_node_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
@@ -77,7 +79,7 @@ class EntryDialog(wx.Dialog):
 
         # 期望时间
         time_expect_tips = wx.StaticText(self.__panel, label="期望时间：")
-        self.__time_expect_input = wx.TextCtrl(self.__panel, value=str_tomorrow)
+        self.__time_expect_input = CustomDatePicker(self.__panel, str_tomorrow)
         box_time_expect = wx.BoxSizer(wx.HORIZONTAL)
         box_time_expect.Add(time_expect_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_time_expect.Add(self.__time_expect_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
@@ -107,11 +109,11 @@ class EntryDialog(wx.Dialog):
 
     @property
     def time_node(self):
-        return self.__time_node_input.GetValue()
+        return self.__time_node_input.ymd_str
 
     @property
     def time_expect(self):
-        return self.__time_expect_input.GetValue()
+        return self.__time_expect_input.ymd_str
 
     @property
     def cycle(self):
@@ -128,7 +130,7 @@ class DeleteDialog(wx.Dialog):
 
         # 时间节点
         time_node_tips = wx.StaticText(self.__panel, label="时间节点：")
-        self.__time_node_input = wx.TextCtrl(self.__panel, value=datetime.now().strftime("%Y-%m-%d"))
+        self.__time_node_input = CustomDatePicker(self.__panel, datetime.now().strftime("%Y-%m-%d"))
         box_time_node = wx.BoxSizer(wx.HORIZONTAL)
         box_time_node.Add(time_node_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_time_node.Add(self.__time_node_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
@@ -150,5 +152,5 @@ class DeleteDialog(wx.Dialog):
 
     @property
     def time_node(self):
-        return self.__time_node_input.GetValue()
+        return self.__time_node_input.ymd_str
     pass
