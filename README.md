@@ -1,10 +1,10 @@
-# ebhs-自用版
+# ebhs-Mac快捷使用版
 在mac上可用的ebhs可视化库
 ![Test](https://github.com/ArtificialYi/PyEbhs/actions/workflows/test.yml/badge.svg?branch=master)
 ![Lint](https://github.com/ArtificialYi/PyEbhs/actions/workflows/lint.yml/badge.svg?branch=master)
 
-## MYSQL相关（暂不支持SQLite）
-```
+## MYSQL相关（已使用SQLite本地化-当前版本暂时无用）
+```活跃时间表
 CREATE TABLE `active_schedule` (
     `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一的自增标识',
     `time_node` datetime NOT NULL COMMENT '时间节点',
@@ -18,7 +18,7 @@ CREATE TABLE `active_schedule` (
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_as_cs
 COMMENT='活跃时间表';
 ```
-```
+```历史时间表
 CREATE TABLE `history_schedule` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一的自增标识',
   `time_node` date NOT NULL COMMENT '时间节点',
