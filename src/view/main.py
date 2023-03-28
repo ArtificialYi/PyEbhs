@@ -37,7 +37,7 @@ class MyFrame(wx.Frame):
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "刷新", '', -1), self.refresh),
+            LabelButton(self.__panel, DTActiveSchedule(-1, "刷新", '', -1), self.__refresh),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
 
@@ -51,18 +51,14 @@ class MyFrame(wx.Frame):
         self.__data.Add(self.__history_inactive, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
 
         # 初始化表
-        self.__coro_and_callback(self.__table_init(), self.refresh)
-        pass
-
-    async def __table_init(self):
-        await self.__service.table_init()
+        self.__coro_and_callback(self.__service.table_init(), self.__refresh)
         pass
 
     def on_default(self, event: wx.CommandEvent):
         wx.MessageDialog(self, "功能尚未完成").ShowWindowModal()
         pass
 
-    def refresh(self, event=None):
+    def __refresh(self, event=None):
         # 刷新数据
         self.__coro_and_callback(self.__get_data(), self.__data_show)
         pass
@@ -104,7 +100,7 @@ class MyFrame(wx.Frame):
         # 执行回顾事件 + 刷新界面
         self.__coro_and_callback(
             self.__service.review_one(button.data.time_node, dialog.review_date, dialog.cycle),
-            self.refresh,
+            self.__refresh,
         )
         return
 
@@ -117,7 +113,7 @@ class MyFrame(wx.Frame):
         # 执行录入事件 + 刷新界面
         self.__coro_and_callback(
             self.__service.entry_time_node(dialog.time_node, dialog.time_expect, dialog.cycle),
-            self.refresh,
+            self.__refresh,
         )
         pass
     pass

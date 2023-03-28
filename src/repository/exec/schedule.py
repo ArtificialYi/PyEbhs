@@ -53,7 +53,8 @@ class ScheduleSqlOne:
 
     async def table_init(self):
         async with self.__manage(True) as conn:
-            await conn.exec(ActionActiveSchedule.create())
+            await conn.exec(ActionActiveSchedule.create_table())
+            await conn.exec(ActionActiveSchedule.create_index())
             await conn.exec(ActionHistorySchedule.create())
             pass
         pass

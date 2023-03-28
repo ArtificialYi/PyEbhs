@@ -1,7 +1,10 @@
 import asyncio
 from contextlib import contextmanager
+import os
 import threading
 from src.view.main import main_loop
+
+root = os.path.dirname(__file__)
 
 
 def start_event_loop(loop):
@@ -23,6 +26,6 @@ def loop_threading():
 
 if __name__ == '__main__':
     with loop_threading() as loop:
-        main_loop(loop)
+        main_loop(loop, f'{root}/ebhs.db')
         pass
     pass
