@@ -17,13 +17,21 @@ class TestSchedule:
             'id': 1, 'time_node': '2020-01-02',
             'time_except': '2020-01-02', 'cycle': 1,
         }
-        mock_cursor = MockCursor().mock_set_fetch_all([row0, row1])
+        row2 = {
+            'id': 1, 'time_node': '2020-01-03',
+            'time_except': '2020-01-03', 'cycle': 1,
+        }
+        mock_cursor = MockCursor().mock_set_fetch_all([row0, row1, row2])
         conn = MockConnection().mock_set_cursor(mock_cursor)
         mocker.patch('PyEbhs.src.modules.PyCommon.src.repository.sqlite.get_conn', return_value=conn)
 
         schedule = Schedule('test.db')
         # 常规活跃列表
         data_dict = await schedule.list_schedule_activate('2020-01-02')
+        assert (
+            len(data_dict['active_tomorrow']) == 1 and data_dict['active_tomorrow'][0]
+            .time_node == row2['time_node']
+        )
         assert (
             len(data_dict['active_today']) == 1 and data_dict['active_today'][0]
             .time_node == row1['time_node']

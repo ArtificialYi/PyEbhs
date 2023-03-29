@@ -24,10 +24,10 @@ class MyFrame(wx.Frame):
 
         self.__opt = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__opt, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
-        self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_default),
-            0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
-        )
+        # self.__opt.Add(
+        #     LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_default),
+        #     0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
+        # )
         self.__opt.Add(
             LabelButton(self.__panel, DTActiveSchedule(-1, "录入", '', -1), self.on_entry_click),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
@@ -43,12 +43,18 @@ class MyFrame(wx.Frame):
 
         self.__data = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__data, 1, wx.EXPAND | wx.ALL, MARGIN)
-        self.__history_active = ListLabelButton(self.__panel, "历史未回顾", self.on_review_one_click)
+        # 历史待回顾
+        self.__history_active = ListLabelButton(self.__panel, "历史待回顾", self.on_review_one_click)
         self.__data.Add(self.__history_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
-        self.__today_active = ListLabelButton(self.__panel, "今日未回顾", self.on_review_one_click)
+        # 今日待回顾
+        self.__today_active = ListLabelButton(self.__panel, "今日待回顾", self.on_review_one_click)
         self.__data.Add(self.__today_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
-        self.__history_inactive = ListLabel(self.__panel, "已回顾")
+        # 今日已回顾
+        self.__history_inactive = ListLabel(self.__panel, "今日已回顾")
         self.__data.Add(self.__history_inactive, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
+        # 明日待回顾
+        self.__tomorrow_active = ListLabel(self.__panel, "明日待回顾")
+        self.__data.Add(self.__tomorrow_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
 
         # 初始化表
         self.__coro_and_callback(self.__service.table_init(), self.__refresh)
@@ -91,6 +97,7 @@ class MyFrame(wx.Frame):
         self.__history_active.refresh(dict_data_sorted["active_history"])
         self.__today_active.refresh(dict_data_sorted["active_today"])
         self.__history_inactive.refresh(dict_data_sorted["inactive_history"])
+        self.__tomorrow_active.refresh(dict_data_sorted["active_tomorrow"])
         wx.CallAfter(self.__review_main)
         pass
 

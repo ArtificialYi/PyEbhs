@@ -17,7 +17,12 @@ CREATE TABLE IF NOT EXISTS `history_schedule` (
     def list_node(str_date: str):
         sql = """
 SELECT * FROM `history_schedule`
-WHERE `time_real` = %s
+WHERE `id` IN (
+    SELECT `id` FROM `history_schedule`
+    WHERE `time_real` = %s
+    ORDER BY `time_node` DESC
+    LIMIT 30
+)
 ORDER BY `time_node` ASC;
         """
         return ActionIter(sql, str_date)

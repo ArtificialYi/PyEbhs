@@ -30,7 +30,7 @@ SELECT * from `active_schedule`
 WHERE `time_except` <= %s
 AND `deleted_date` = '9999-12-31 23:59:59'
 ORDER BY `time_node` ASC
-LIMIT 10;
+LIMIT 30;
         """
         return ActionIter(sql, str_date)
 
