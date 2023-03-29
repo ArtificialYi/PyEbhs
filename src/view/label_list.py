@@ -21,12 +21,32 @@ class LabelButton(wx.Button):
     pass
 
 
-class ListLabelButton(wx.BoxSizer):
-    def __init__(self, parent: wx.Panel, title: str, data_sorted: List[DTActiveSchedule], button_callback: Callable):
+class ListView(wx.BoxSizer):
+    def __init__(self, parent: wx.Panel, title: str):
         super().__init__(wx.VERTICAL)
-        self.__parent = parent
         self.__title = wx.StaticText(parent, label=title)
         self.Add(self.__title, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
+        self.__items = dict()
+        pass
+
+    def view_idx(self, view):
+        for idx, item in enumerate(self.GetChildren()):
+            if item.GetWindow() == view:
+                return idx
+            pass
+        return -1
+
+    def add_item(self, key: str, view):
+        self.__items[key] = view
+        self.Add(view, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+        pass
+    pass
+
+
+class ListLabelButton(ListView):
+    def __init__(self, parent: wx.Panel, title: str, data_sorted: List[DTActiveSchedule], button_callback: Callable):
+        super().__init__(parent, title)
+        self.__parent = parent
         self.__items: Dict[str, LabelButton] = dict()
         self.__callback = button_callback
         for data in data_sorted:
@@ -73,12 +93,10 @@ class ListLabelButton(wx.BoxSizer):
     pass
 
 
-class ListLabel(wx.BoxSizer):
+class ListLabel(ListView):
     def __init__(self, parent: wx.Panel, title: str, str_sorted: List[DTActiveSchedule]):
-        super().__init__(wx.VERTICAL)
+        super().__init__(parent, title)
         self.__parent = parent
-        self.__title = wx.StaticText(parent, label=title)
-        self.Add(self.__title, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
         self.__items: Dict[str, wx.StaticText] = dict()
         self.refresh(str_sorted)
         pass
