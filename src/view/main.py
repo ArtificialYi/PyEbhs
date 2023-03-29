@@ -43,11 +43,11 @@ class MyFrame(wx.Frame):
 
         self.__data = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__data, 1, wx.EXPAND | wx.ALL, MARGIN)
-        self.__history_active = ListLabelButton(self.__panel, "历史未回顾", [], self.on_review_one_click)
+        self.__history_active = ListLabelButton(self.__panel, "历史未回顾", self.on_review_one_click)
         self.__data.Add(self.__history_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
-        self.__today_active = ListLabelButton(self.__panel, "今日未回顾", [], self.on_review_one_click)
+        self.__today_active = ListLabelButton(self.__panel, "今日未回顾", self.on_review_one_click)
         self.__data.Add(self.__today_active, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
-        self.__history_inactive = ListLabel(self.__panel, "已回顾", [])
+        self.__history_inactive = ListLabel(self.__panel, "已回顾")
         self.__data.Add(self.__history_inactive, 1, wx.ALIGN_TOP | wx.ALL, MARGIN)
 
         # 初始化表

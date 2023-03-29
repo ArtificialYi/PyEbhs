@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple, Type
 
 from .base import MARGIN
 from ..data.schedule import DTActiveSchedule
@@ -26,115 +26,65 @@ class ListView(wx.BoxSizer):
         super().__init__(wx.VERTICAL)
         self.__title = wx.StaticText(parent, label=title)
         self.Add(self.__title, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
-        self.__items = dict()
+        self.__items: Dict[str, wx.Window] = dict()
         pass
 
-    def view_idx(self, view):
+    def __view_idx(self, view: wx.Window):
         for idx, item in enumerate(self.GetChildren()):
             if item.GetWindow() == view:
                 return idx
             pass
         return -1
 
-    def add_item(self, key: str, view):
-        self.__items[key] = view
-        self.Add(view, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+    def __retain_item(self, keys: set):
+        for key in set(self.__items.keys()):
+            if key not in keys:
+                self.Remove(self.__view_idx(self.__items[key]))
+                self.__items[key].Destroy()
+                del self.__items[key]
+            pass
+        pass
+
+    def recombine(self, data_sorted: List[Tuple[str, Type[wx.Window], List, Dict]]):
+        self.__retain_item({key for key, _, _, _ in data_sorted})
+        for idx, (key, view_type, args, kwargs) in enumerate(data_sorted, 1):
+            if key in self.__items.keys():
+                continue
+            self.__items[key] = view_type(*args, **kwargs)
+            self.Insert(idx, self.__items[key], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
+            pass
         pass
     pass
 
 
 class ListLabelButton(ListView):
-    def __init__(self, parent: wx.Panel, title: str, data_sorted: List[DTActiveSchedule], button_callback: Callable):
+    def __init__(self, parent: wx.Panel, title: str, button_callback: Callable):
         super().__init__(parent, title)
         self.__parent = parent
-        self.__items: Dict[str, LabelButton] = dict()
         self.__callback = button_callback
-        for data in data_sorted:
-            self.__items[data.time_node] = LabelButton(parent, data, self.__callback)
-            self.Add(self.__items[data.time_node], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
-            pass
         pass
-
-    def __button_idx(self, button: LabelButton):
-        for idx, item in enumerate(self.GetChildren()):
-            if item.GetWindow() == button:
-                return idx
-            pass
-        return -1
 
     def refresh(self, data_sorted: List[DTActiveSchedule]):
-        # 移除不在列表中的控件
-        self.__remove_window([
-            data.time_node
+        # 列表重组
+        self.recombine([
+            (data.time_node, LabelButton, [self.__parent, data, self.__callback], dict())
             for data in data_sorted
         ])
-
-        # 添加新的控件
-        keys = self.__items.keys()
-        for idx, data in enumerate(data_sorted, 1):
-            key = data.time_node
-            if key in keys:
-                continue
-            self.__items[key] = LabelButton(self.__parent, data, self.__callback)
-            self.Insert(idx, self.__items[key], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
-            pass
-        pass
-
-    def __remove_window(self, key_available: List[str]):
-        keys = set(self.__items.keys())
-        for key in keys:
-            if key not in key_available:
-                self.Remove(self.__button_idx(self.__items[key]))
-                self.__items[key].Destroy()
-                del self.__items[key]
-                pass
-            pass
         pass
     pass
 
 
 class ListLabel(ListView):
-    def __init__(self, parent: wx.Panel, title: str, str_sorted: List[DTActiveSchedule]):
+    def __init__(self, parent: wx.Panel, title: str):
         super().__init__(parent, title)
         self.__parent = parent
-        self.__items: Dict[str, wx.StaticText] = dict()
-        self.refresh(str_sorted)
         pass
-
-    def __button_idx(self, button: wx.StaticText):
-        for idx, item in enumerate(self.GetChildren()):
-            if item.GetWindow() == button:
-                return idx
-            pass
-        return -1
 
     def refresh(self, data_sorted: List[DTActiveSchedule]):
-        # 移除不在列表中的控件
-        self.__remove_window([
-            data.time_node
+        # 列表重组
+        self.recombine([
+            (data.time_node, wx.StaticText, [self.__parent], {'label': data.time_node})
             for data in data_sorted
         ])
-
-        # 添加新的控件
-        keys = self.__items.keys()
-        for idx, data in enumerate(data_sorted, 1):
-            if data.time_node in keys:
-                continue
-            self.__items[data.time_node] = wx.StaticText(self.__parent, label=data.time_node)
-            self.Insert(idx, self.__items[data.time_node], 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
-            pass
-        pass
-
-    def __remove_window(self, key_available: List[str]):
-        keys = set(self.__items.keys())
-        for key in keys:
-            if key not in key_available:
-                idx = self.__button_idx(self.__items[key])
-                self.Remove(idx)
-                print('移除：', key, idx)
-                self.__items[key].Destroy()
-                del self.__items[key]
-                pass
-            pass
         pass
     pass
