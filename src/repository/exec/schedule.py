@@ -16,6 +16,14 @@ class ScheduleSqlOne:
         self.__manage = manage
         pass
 
+    async def table_init(self):
+        async with self.__manage(True) as conn:
+            await conn.exec(ActionActiveSchedule.create_table())
+            await conn.exec(ActionActiveSchedule.create_index())
+            await conn.exec(ActionHistorySchedule.create())
+            pass
+        pass
+
     async def iter_schedule_active(self, str_date: str) -> AsyncGenerator[dict, None]:
         async with self.__manage() as conn:
             # 获取活跃时间
@@ -51,11 +59,12 @@ class ScheduleSqlOne:
             pass
         pass
 
-    async def table_init(self):
+    async def delete_time_node(self, time_node: str):
         async with self.__manage(True) as conn:
-            await conn.exec(ActionActiveSchedule.create_table())
-            await conn.exec(ActionActiveSchedule.create_index())
-            await conn.exec(ActionHistorySchedule.create())
+            # 获取当前时间的年月日
+            time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # 删除活跃时间
+            await conn.exec(ActionActiveSchedule.delete_one(time_node, time_now))
             pass
         pass
     pass

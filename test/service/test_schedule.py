@@ -73,4 +73,11 @@ class TestSchedule:
         schedule = Schedule('test.db')
         await schedule.table_init()
         pass
+
+    @PytestAsyncTimeout(1)
+    async def test_delete_time_node(self, mocker: MockerFixture):
+        mocker.patch('PyEbhs.src.modules.PyCommon.src.repository.sqlite.get_conn', new=MockConnection)
+        schedule = Schedule('test.db')
+        await schedule.delete_time_node('')
+        pass
     pass
