@@ -6,7 +6,7 @@ import wx
 
 from .dialog import DeleteDialog, EntryDialog, ReviewDialog
 
-from .label_list import LabelButton, ListLabel, ListLabelButton
+from .label_list import LabelButton, LabelButtonGen, ListLabel, ListLabelButton
 from .base import MARGIN
 from ..data.schedule import DTActiveSchedule
 from ..service.schedule import Schedule
@@ -33,13 +33,12 @@ class MyFrame(wx.Frame):
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
         self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_delete_click),
-            0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
-        )
-        self.__opt.Add(
             LabelButton(self.__panel, DTActiveSchedule(-1, "刷新", '', -1), self.__refresh),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
         )
+        button_delete = LabelButtonGen(self.__panel, DTActiveSchedule(-1, "删除", '', -1), self.on_delete_click)
+        button_delete.SetForegroundColour(wx.Colour(255, 0, 0))
+        self.__opt.Add(button_delete, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN,)
 
         self.__data = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__data, 1, wx.EXPAND | wx.ALL, MARGIN)
@@ -73,7 +72,10 @@ class MyFrame(wx.Frame):
         # 回调异常处理
         e = future.exception()
         if e is not None:
-            raise e
+            dialog_err = wx.MessageDialog(self.__panel, e.args[0])
+            dialog_err.ShowModal()
+            dialog_err.Destroy()
+            pass
         pass
 
     def __coro_and_callback(self, coro: Coroutine, callback: Callable):
