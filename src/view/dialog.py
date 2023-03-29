@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import wx
+from wx.lib.buttons import GenButton
 
 from .calendar import CustomDatePicker
 
@@ -137,7 +138,8 @@ class DeleteDialog(wx.Dialog):
         box_all.Add(box_time_node, 0, wx.ALIGN_LEFT | wx.ALL, MARGIN)
 
         # 确认和取消按钮
-        ok_button = wx.Button(self.__panel, wx.ID_OK, "确认")
+        ok_button = GenButton(self.__panel, wx.ID_OK, "确认")
+        ok_button.SetForegroundColour(wx.Colour(255, 0, 0))
         cancel_button = wx.Button(self.__panel, wx.ID_CANCEL, "取消")
         box_button = wx.BoxSizer(wx.HORIZONTAL)
         box_button.Add(ok_button, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)

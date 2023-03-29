@@ -3,9 +3,26 @@ from typing import Callable, Dict, List, Tuple, Type
 from .base import MARGIN
 from ..data.schedule import DTActiveSchedule
 import wx
+from wx.lib.buttons import GenButton
 
 
 class LabelButton(wx.Button):
+    def __init__(self, parent: wx.Panel, data: DTActiveSchedule, button_callback: Callable):
+        super().__init__(parent, label=data.time_node)
+        self.Bind(wx.EVT_BUTTON, button_callback)
+        self.__dc = wx.ClientDC(self)
+        text_width, text_height = self.__dc.GetTextExtent(data.time_node)
+        self.SetMinClientSize((text_width + 10, text_height))
+        self.__data = data
+        pass
+
+    @property
+    def data(self):
+        return self.__data
+    pass
+
+
+class LabelButtonGen(GenButton):
     def __init__(self, parent: wx.Panel, data: DTActiveSchedule, button_callback: Callable):
         super().__init__(parent, label=data.time_node)
         self.Bind(wx.EVT_BUTTON, button_callback)
