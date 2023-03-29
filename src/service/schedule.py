@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Dict, List
 
 from ..data.schedule import DTActiveSchedule
@@ -13,17 +14,24 @@ class Schedule:
         await self.__exec.table_init()
         pass
 
-    async def list_schedule_activate(self, str_date: str) -> Dict[str, List[DTActiveSchedule]]:
+    def __group_active(self, data: DTActiveSchedule, str_today: str):
+        if data.time_except > str_today:
+            return 'active_tomorrow'
+        if data.time_except == str_today:
+            return 'active_today'
+        return 'active_history'
+
+    async def list_schedule_activate(self, str_today: str) -> Dict[str, List[DTActiveSchedule]]:
         res = {
+            'active_tomorrow': [],
             'active_today': [],
             'active_history': [],
         }
-        async for row in self.__exec.iter_schedule_active(str_date):
+        date_tomorrow = datetime.strptime(str_today, '%Y-%m-%d') + timedelta(days=1)
+        str_tomorrow = date_tomorrow.strftime('%Y-%m-%d')
+        async for row in self.__exec.iter_schedule_active(str_tomorrow):
             data = DTActiveSchedule.create_from_active_sqlite(row)
-            if str_date > data.time_except:
-                res['active_history'].append(data)
-                continue
-            res['active_today'].append(data)
+            res[self.__group_active(data, str_today)].append(data)
             pass
         return res
 
