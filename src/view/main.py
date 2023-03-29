@@ -24,10 +24,10 @@ class MyFrame(wx.Frame):
 
         self.__opt = wx.BoxSizer(wx.HORIZONTAL)
         self.__view.Add(self.__opt, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
-        self.__opt.Add(
-            LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_default),
-            0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
-        )
+        # self.__opt.Add(
+        #     LabelButton(self.__panel, DTActiveSchedule(-1, "回顾", '', -1), self.on_default),
+        #     0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
+        # )
         self.__opt.Add(
             LabelButton(self.__panel, DTActiveSchedule(-1, "录入", '', -1), self.on_entry_click),
             0, wx.ALIGN_CENTER | wx.ALL, MARGIN,
