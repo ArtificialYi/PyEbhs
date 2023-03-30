@@ -33,8 +33,8 @@ class CustomDatePicker(wx.Panel):
         pass
 
     def update_days(self, event):
-        year = int(self.__year_choice.GetString(self.__year_choice.GetSelection()))
-        month = int(self.__month_choice.GetString(self.__month_choice.GetSelection()))
+        year = int(self.__year_choice.GetStringSelection())
+        month = int(self.__month_choice.GetStringSelection())
 
         _, days_in_month = calendar.monthrange(year, month)
 
@@ -46,8 +46,8 @@ class CustomDatePicker(wx.Panel):
 
     @property
     def ymd_str(self):
-        year_str = self.__year_choice.GetString(self.__year_choice.GetSelection())
-        month_str = self.__month_choice.GetString(self.__month_choice.GetSelection())
-        day_str = self.__day_choice.GetString(self.__day_choice.GetSelection())
+        year_str = self.__year_choice.GetStringSelection()
+        month_str = self.__month_choice.GetStringSelection()
+        day_str = self.__day_choice.GetStringSelection()
         return f'{year_str}-{month_str}-{day_str}'
     pass
