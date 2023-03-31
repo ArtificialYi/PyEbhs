@@ -40,7 +40,7 @@ class CustomDatePicker(wx.Panel):
 
         idx_pre = self.__day_choice.GetSelection()
         self.__day_choice.Clear()
-        self.__day_choice.AppendItems([str(d) for d in range(1, days_in_month + 1)])
+        self.__day_choice.AppendItems([f'{d:02}' for d in range(1, days_in_month + 1)])
         self.__day_choice.SetSelection(min(idx_pre, days_in_month - 1))
         pass
 
@@ -49,5 +49,5 @@ class CustomDatePicker(wx.Panel):
         year_str = self.__year_choice.GetStringSelection()
         month_str = self.__month_choice.GetStringSelection()
         day_str = self.__day_choice.GetStringSelection()
-        return f'{year_str}-{month_str}-{day_str}'
+        return f'{year_str.zfill(4)}-{month_str.zfill(2)}-{day_str.zfill(2)}'
     pass
