@@ -66,13 +66,13 @@ class EntryDialog(wx.Dialog):
         # 获取今日日期
         date_toay = datetime.now()
         str_today = date_toay.strftime("%Y-%m-%d")
-        # 获取明日日期
-        date_tomorrow = date_toay + timedelta(days=1)
-        str_tomorrow = date_tomorrow.strftime("%Y-%m-%d")
+        # 获取昨日日期
+        date_yesterday = date_toay - timedelta(days=1)
+        str_yesterday = date_yesterday.strftime("%Y-%m-%d")
 
         # 时间节点
         time_node_tips = wx.StaticText(self.__panel, label="时间节点：")
-        self.__time_node_input = CustomDatePicker(self.__panel, str_today)
+        self.__time_node_input = CustomDatePicker(self.__panel, str_yesterday)
         box_time_node = wx.BoxSizer(wx.HORIZONTAL)
         box_time_node.Add(time_node_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_time_node.Add(self.__time_node_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
@@ -80,7 +80,7 @@ class EntryDialog(wx.Dialog):
 
         # 期望时间
         time_expect_tips = wx.StaticText(self.__panel, label="期望时间：")
-        self.__time_expect_input = CustomDatePicker(self.__panel, str_tomorrow)
+        self.__time_expect_input = CustomDatePicker(self.__panel, str_today)
         box_time_expect = wx.BoxSizer(wx.HORIZONTAL)
         box_time_expect.Add(time_expect_tips, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)
         box_time_expect.Add(self.__time_expect_input, 0, wx.ALIGN_CENTER | wx.ALL, MARGIN)

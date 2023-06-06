@@ -46,8 +46,8 @@ class CustomDatePicker(wx.Panel):
 
     @property
     def ymd_str(self):
-        year_str = self.__year_choice.GetStringSelection()
-        month_str = self.__month_choice.GetStringSelection()
-        day_str = self.__day_choice.GetStringSelection()
+        year_str: str = self.__year_choice.GetStringSelection()
+        month_str: str = self.__month_choice.GetStringSelection()
+        day_str: str = self.__day_choice.GetStringSelection()
         return f'{year_str.zfill(4)}-{month_str.zfill(2)}-{day_str.zfill(2)}'
     pass
